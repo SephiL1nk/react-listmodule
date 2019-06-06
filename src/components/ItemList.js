@@ -42,7 +42,7 @@ export default class ItemList extends Component {
         <React.Fragment>
           <TableBody> 
             <TableRow>
-              No data found for this research, sorry
+              <div className='no-data-found'>No data found for this research, sorry</div>
             </TableRow>
           </TableBody>
         </React.Fragment>

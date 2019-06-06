@@ -32,19 +32,23 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-postcss": "^2.0.3",
-    "webpack-dev-server": "^3.5.1"
+    "webpack-dev-server": "^3.5.1",
+    "css-loader": "^2.1.1",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack-cli": "^3.3.2",
+    "webpack": "^4.32.2",
+    "react-test-renderer": "^16.8.6",
+    "classnames": "^2.2.6",
+    "html-webpack-plugin": "^3.2.0",
+    "prop-types": "^15.7.2"
   },
   "dependencies": {
     "@material-ui/core": "^4.0.0",
     "axios": "^0.18.0",
-    "classnames": "^2.2.6",
-    "html-webpack-plugin": "^3.2.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
-    "react-datetime": "^2.16.3",
-    "react-test-renderer": "^16.8.6",
-    "webpack": "^4.32.2",
-    "webpack-cli": "^3.3.2"
+    "react-datetime": "^2.16.3"
   },
   "peerDependencies": {
     "react": "^16.8.6",
