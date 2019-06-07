@@ -1,125 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Snapshot testing and is everything rendering  Is snapshot the same 1`] = `
-<table
-  className="MuiTable-root"
+<div
+  className="MuiPaper-root MuiPaper-elevation1 MuiPaper-rounded"
 >
-  <thead
-    className="MuiTableHead-root"
+  <h3
+    className="MuiTypography-root no-data-found MuiTypography-h5"
   >
-    <tr
-      className="MuiTableRow-root MuiTableRow-head"
-    >
-      <th
-        aria-sort={null}
-        className="MuiTableCell-root MuiTableCell-head"
-        scope="col"
-      />
-    </tr>
-    <tr
-      className="MuiTableRow-root MuiTableRow-head"
-    />
-  </thead>
-  <tbody
-    className="MuiTableBody-root"
-  >
-    <tr
-      className="MuiTableRow-root"
-    >
-      <div
-        className="no-data-found"
-      >
-        No data found for this research, sorry
-      </div>
-    </tr>
-  </tbody>
-  <div
-    className="MuiTablePagination-root"
-  >
-    <div
-      className="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters MuiTablePagination-toolbar"
-    >
-      <div
-        className="MuiTablePagination-spacer"
-      />
-      <span
-        className="MuiTypography-root MuiTypography-caption MuiTypography-colorInherit MuiTablePagination-caption"
-      >
-        0-0 of 0
-      </span>
-      <div
-        className="MuiTablePagination-actions"
-      >
-        <button
-          aria-label="Previous Page"
-          className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit Mui-disabled Mui-disabled"
-          disabled={true}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={-1}
-          type="button"
-        >
-          <span
-            className="MuiIconButton-label"
-          >
-            <svg
-              aria-hidden="true"
-              className="MuiSvgIcon-root"
-              focusable="false"
-              role="presentation"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"
-              />
-            </svg>
-          </span>
-        </button>
-        <button
-          aria-label="Next Page"
-          className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit Mui-disabled Mui-disabled"
-          disabled={true}
-          onBlur={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
-          tabIndex={-1}
-          type="button"
-        >
-          <span
-            className="MuiIconButton-label"
-          >
-            <svg
-              aria-hidden="true"
-              className="MuiSvgIcon-root"
-              focusable="false"
-              role="presentation"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"
-              />
-            </svg>
-          </span>
-        </button>
-      </div>
-    </div>
-  </div>
-</table>
+    No data where available to display this component.
+  </h3>
+</div>
 `;

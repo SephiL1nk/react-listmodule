@@ -4,11 +4,10 @@ import ItemList from './components/ItemList'
 import Pagination from './components/Pagination'
 import Loading from './components/Loading'
 import Header from './components/Header'
-import { Table } from '@material-ui/core'
+import { Table, Paper, Typography } from '@material-ui/core'
 import { renameKey, isFunction } from './services/objectHelper'
 import { axiosGet } from './services/axiosHelper'
-import PropTypes from 'prop-types'
-import List from '.';
+import propTypes from 'prop-types'
 
 export default class ListEnhanced extends Component {
   constructor() {
@@ -31,6 +30,7 @@ export default class ListEnhanced extends Component {
       const { itemsPerPage } = this.props.api.options
       this.setState({itemsPerPage})
     } 
+
     this.getDataFromApi()
   }
 
@@ -116,62 +116,79 @@ export default class ListEnhanced extends Component {
   }
   
   render() {
-    const { header, actionListFunction, transformDataOnDisplay } = this.props
+    const { header, actionListFunction, transformDataOnDisplay, messages } = this.props
     const { rowsPerPageOptions } = !_.isUndefined(this.props.api) && !_.isUndefined(this.props.api.options)
     const { data, page, itemsPerPage, total, order, orderBy, loading } = this.state
 
-    return (
-      <React.Fragment>
-        <Table>
-          <Header {...this.props} onRequestSort={this.handleRequestSort} handleSearchRequest={this.handleSearchRequest} order={order} orderBy={orderBy}/>
-          {loading === true ? <Loading /> : <ItemList actionListFunction={actionListFunction} header={header} data={data} total={total} transformDataOnDisplay={transformDataOnDisplay}/>}
-          <Pagination
-            page={page} 
-            rowsPerPage={itemsPerPage} 
-            rowsPerPageOptions={!_.isUndefined(rowsPerPageOptions) ? rowsPerPageOptions : []} 
-            count={total} 
-            onChangePage={(event, page) => this.handleChangePage(event, page)} 
-            onChangeRowsPerPage={(event) => this.handleChangeRowsPerPage(event)} />
-        </Table>
-      </React.Fragment>
-    )
+    if (!_.isEmpty(data) || total !== 0 || loading === true) {
+      return (
+        <React.Fragment>
+          <Table>
+            <Header {...this.props} onRequestSort={this.handleRequestSort} handleSearchRequest={this.handleSearchRequest} order={order} orderBy={orderBy}/>
+            {loading === true ? <Loading /> : <ItemList actionListFunction={actionListFunction} header={header} data={data} total={total} transformDataOnDisplay={transformDataOnDisplay}/>}
+            <Pagination
+              page={page} 
+              rowsPerPage={itemsPerPage} 
+              rowsPerPageOptions={!_.isUndefined(rowsPerPageOptions) ? rowsPerPageOptions : []} 
+              count={total} 
+              onChangePage={(event, page) => this.handleChangePage(event, page)} 
+              onChangeRowsPerPage={(event) => this.handleChangeRowsPerPage(event)} />
+          </Table>
+        </React.Fragment>
+      )
+    } else {
+      return (
+        <React.Fragment>
+          <Paper>
+            <Typography variant="h5" component="h3" className="no-data-found">
+              { _.get(messages, 'nodata') ? messages.nodata : "No data where available to display this component."}
+            </Typography>
+          </Paper>
+        </React.Fragment>
+      )
+    }
   }
 }
 
-List.PropTypes = {
-  header: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    numeric: PropTypes.bool,
-    sortable: PropTypes.bool,
-    disablePadding: PropTypes.bool,
-    label: PropTypes.string.isRequired,
-    search: PropTypes.shape({
-      type: PropTypes.string,
-      suffix: PropTypes.string,
-      multiple: PropTypes.bool,
-      datas: PropTypes.oneOfType([
-        PropTypes.array,
-        PropTypes.object
+ListEnhanced.propTypes = {
+  header: propTypes.shape({
+    id: propTypes.string.isRequired,
+    numeric: propTypes.bool,
+    sortable: propTypes.bool,
+    disablePadding: propTypes.bool,
+    label: propTypes.string.isRequired,
+    search: propTypes.shape({
+      type: propTypes.string,
+      suffix: propTypes.string,
+      multiple: propTypes.bool,
+      datas: propTypes.oneOfType([
+        propTypes.array,
+        propTypes.object
       ]),
-      choiceByKey: PropTypes.bool
+      choiceByKey: propTypes.bool
     })
   }),
-  api: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    options: PropTypes.shape({
-      itemsPerPageKey: PropTypes.string,
-      pageKey: PropTypes.string,
-      dataKey: PropTypes.string,
-      totalItemsKey: PropTypes.string,
-      totalItems: PropTypes.number,
-      itemsPerPage: PropTypes.number,
-      rowsPerPageOptions: PropTypes.array,
-      extraParams: PropTypes.object
-    }),
-    header: PropTypes.object.isRequired
+  api: propTypes.object.isRequired,
+  messages: propTypes.shape({
+    nodata: propTypes.string,
+    apierror: propTypes.string, 
   }),
-  showSearchBar: PropTypes.bool,
-  refresh: PropTypes.bool,
-  transformDataOnFetch: PropTypes.func,
-  transformDataOnDisplay: PropTypes.func
+  api: propTypes.shape({
+    url: propTypes.string.isRequired,
+    options: propTypes.shape({
+      itemsPerPageKey: propTypes.string,
+      pageKey: propTypes.string,
+      dataKey: propTypes.string,
+      totalItemsKey: propTypes.string,
+      totalItems: propTypes.number,
+      itemsPerPage: propTypes.number,
+      rowsPerPageOptions: propTypes.array,
+      extraParams: propTypes.object
+    }),
+    header: propTypes.object.isRequired
+  }),
+  showSearchBar: propTypes.bool,
+  refresh: propTypes.bool,
+  transformDataOnFetch: propTypes.func,
+  transformDataOnDisplay: propTypes.func
 }
