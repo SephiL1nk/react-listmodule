@@ -1,4 +1,4 @@
-const datas = [
+const listCoupons = [
   {
     "@id": "/api/coupons/5ca5d16fe0416284944fcb22",
     "@type": "Coupon",
@@ -1571,38 +1571,27 @@ const datas = [
 const header = [
   {
     "id": "operationLabel",
-    "numeric": false,
     "sortable": true,
     "disablePadding": false,
     "label": "Titre"
   },
   {
     "id": "brands",
-    "numeric": false,
     "sortable": true,
     "disablePadding": false,
     "search": {
-      "by": "brands.name",
-      "type": "select",
-      "multiple": true,
-      "datas": [
-        "Quoty",
-        "Kimple",
-        "Plyce"
-      ]
+      "by": "brands.name"
     },
     "label": "Entreprise"
   },
   {
     "id": "couponCode",
-    "numeric": false,
     "sortable": true,
     "disablePadding": false,
     "label": "Code Coupon"
   },
   {
     "id": "amount",
-    "numeric": false,
     "sortable": true,
     "disablePadding": false,
     "label": "Valeur faciale",
@@ -1612,48 +1601,15 @@ const header = [
   },
   {
     "id": "couponType.label",
-    "numeric": false,
     "sortable": true,
     "disablePadding": false,
     "search": {
-      "type": "select",
-      "multiple": true,
-      "datas": [
-        "On pack détachable stické dans les chaines de production",
-        "On pack détachable, stické par les commerciaux",
-        "On pack sur prochain achat",
-        "In pack",
-        "Cross couponing",
-        "Animation en linéaire",
-        "Animation hors linéaire",
-        "Chéquier multimarques",
-        "Libre service (borne, magazine caisse, BOX...)",
-        "Bloc rayon",
-        "Sac coupon",
-        "Coupon caisse (catalina, enseigne…)",
-        "Mailing (MD adressé)",
-        "Lettre BR, flexybon",
-        "Presse",
-        "Boites aux lettres (non adressé)",
-        "Prospectus enseigne",
-        "Lieux de vie (street, vacances, autoroutes,cc, medecins…)",
-        "Asile colis, boite bébé",
-        "Webcoupon site de la marque ",
-        "Webcoupon site partenaire (enseigne, media web...)",
-        "e-coupons (non webcoupon)",
-        "Self scanning",
-        "Carte de fidélité",
-        "On line, codes promotionnels",
-        "Mobile coupon",
-        "Bon d'achat consommateur, service conso",
-        "Autres (gain, diffusion mixte,…)"
-      ]
+      "multiple": true
     },
     "label": "Mode de diffusion"
   },
   {
     "id": "startDate",
-    "numeric": false,
     "sortable": true,
     "disablePadding": false,
     "search": {
@@ -1664,7 +1620,6 @@ const header = [
   },
   {
     "id": "endDate",
-    "numeric": false,
     "sortable": true,
     "disablePadding": false,
     "search": {
@@ -1684,19 +1639,10 @@ const header = [
   },
   {
     "id": "currentStatusTranslate",
-    "numeric": false,
     "sortable": true,
     "disablePadding": false,
     "search": {
-      "by": "currentStatus",
-      "type": "select",
-      "multiple": true,
-      "datas": {
-        "review": "A valider",
-        "draft": "Brouillon",
-        "accepted": "Accepté"
-      },
-      "choiceByKey": true
+      "by": "currentStatus"
     },
     "label": "Statut actuel"
   },
@@ -1721,22 +1667,15 @@ const api = {
       10,
       20,
       30
-    ],
-    "extraParams": {
-      "currentStatus": [
-        "review",
-        "draft",
-        "accepted"
-      ]
-    }
+    ]
   },
   "header": {
     "common": {
       "Accept": "application/ld+json",
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImN0eSI6IkpXVCJ9.eyJpYXQiOjE1NTk5MTM3MzYsImV4cCI6MTU2MDAwMDEzNiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJ1c2VybmFtZSI6ImRldm9wcyIsImNvbXBhbnkiOiI0ZWMwOWExMi1kMDU0LTRkMjQtYjdiOC02ZWU1OWVmYjJkYWUiLCJmdWxsTmFtZSI6IkRldmVsb3BwZXIgVXNlciIsImlwIjoiOTEuMjEyLjIxLjI0NyIsInV1aWQiOiI3YjA2Yjk2NC1mY2YxLTRmNDQtYjQ0OC03NGNmZmExZTA0YzQifQ.X898jGnKEK5bSizxVwOCPNfE7noF4XtBMGawMcImPRAJnISFfou9an1aNj2wDnEyRedHsBYZGahynltoTtG_rKyMRXaeP34GCUjCQboGo79uiPrQrESLUbs4SEkcGB3iXJ06uIOoUFF4LivVFZtuBvNIAMDnWMDnBauY2bE9rnMJlfxYeAO_86fvuEQPRpZsSIRzhwIpC0eRnh8dt0IZiUc1eNAVl5mSVBsWANC_J-zpTOMrHogcSuKW6l_jMsm3GChIShvGmPrWVnN_5jzvOfpKhgUYjMefPOV1nmQGgiguHCjOG5nFCLj947d7X9laf51TbN-L_GH2DM0-J7wl6g0zqWkXkBXZOvKPRLlR1I6s6qZfsG6hJbD9voFf315_MjmtXu4xs--hFt9IiayIDscm3ebmIA5u_dLVvmzv3wPMCH70ZHdeLliH8Y5cHiugBegDvRf5OqLEEg-9yBt9Neajn2fYqexuwGvKPkrZljtbf_Ii4rYLQT4oA7bpypA5gTZF6Nk5O1BBGzgfe5u81-jH4AAkqMPnBCu22dRoZCW5i7EiBkzYMDByA39MeYbId8vTUhqufA7dwX4f3c3GlJ8PnJpzi8gRpTpuXNm8o-VMckYsM3n4yrEdx2UDbkDrkNAEFclGMDO_u08aS1-D0JgLVeeAyo2R23-L8tDFuZY"
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImN0eSI6IkpXVCJ9.eyJpYXQiOjE1NjAzNDcwMzgsImV4cCI6MTU2MDQzMzQzOCwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJ1c2VybmFtZSI6ImRldm9wcyIsImNvbXBhbnkiOiI0ZWMwOWExMi1kMDU0LTRkMjQtYjdiOC02ZWU1OWVmYjJkYWUiLCJmdWxsTmFtZSI6IkRldmVsb3BwZXIgVXNlciIsImlwIjoiOTEuMjEyLjIxLjI0NyIsInV1aWQiOiI3YjA2Yjk2NC1mY2YxLTRmNDQtYjQ0OC03NGNmZmExZTA0YzQifQ.fuXcw-aYesiGgCJU4cO60_ItwkE40nz8WhgentHvHRGticx0Pmgwtqr09gb1EUcWxrajK-0bAS2r2FgCpCxjzX2J0V9WdHncUZGwp5Q6H0Sl7xb7sh3JRPD_IXVZqFvNzbXvxKSTMCm2iI1NjokcwOlhJmE6Iocdghor2FUQu-QlFxWYAoftpX-NEPCEw1HPnFrFJD9ZwbOeeLeTc1XCz7XBJ1Z61i6Gj3Jfo-Dkfp8vh3rSInzmJ3utGhC5fP5yLcfo8xbxI8vqyt4MWpNdcyJuRGhAyDmjBdl2fJbazZwAL_tc-nBOF43L4jBekPzcuqRwSH2PTYVpy3XrbkGIaAnFGZadICBrN_6PEpIIs4YhuQl0lPFAeSth9_wgtG9hXseNOsJglLPscyZ7CeucDlRc_HPKhduL4IlgBcbX5Y84R9b0GFfUZ3aX6QP8r_eCfLEWJ8-J5sWdCkRps2QbdNaXjrxdz1FKWWqsgDHYUVBAybX_Q70TcehvQFANuqFMD9egXqtRy8xUwaUsWHN5UfzzTbGig0hyxSp2hAidWk67D4fEzWpvV9tfj0g_Q8kMWpHeVI5IdnZm2o28SZAbiezx_wuv219cytf8gewwaKvaPzvZwkDfz14NCbN9jpy9_NnwfBelWMF9R_wKZXsdOIiDJHeoqpPTgsKkCApsTsw"
     }
   }
 }
 
 
-export { api, header, datas }
+export { api, header, listCoupons }

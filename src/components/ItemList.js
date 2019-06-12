@@ -13,14 +13,14 @@ export default class ItemList extends Component {
     return (
       <React.Fragment>
         <TableBody> 
-          {data && !_.isEmpty(data) && _.map(data, (item) => 
-            
+          {data && !_.isEmpty(data) && !_.isEmpty(header) && _.map(data, (item) => 
             <TableRow
               hover
               role="checkbox"
               tabIndex={-1}
               key={item.id}
               style={item.style}
+              className="item-list-data-table"
             >
               {_.map(header, (column) => {
                 if (column.id === 'actions' && isFunction(this.props.actionListFunction)) {
@@ -32,6 +32,19 @@ export default class ItemList extends Component {
               })}
             </TableRow>
           )}
+
+          {_.isEmpty(data) && _.times(10, (index) => {
+            return (<TableRow
+              hover
+              role="checkbox"
+              key={index}
+              className="no-data-found"
+            >
+              {_.map(header, (col) => {
+                return (<TableCell></TableCell>)
+              })}
+            </TableRow>)
+          })}
         </TableBody>
       </React.Fragment>
     )

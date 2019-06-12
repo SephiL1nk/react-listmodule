@@ -1,7 +1,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 
-function setHeader(params = {}) {
+const setHeader = (params = {}) => {
   if (params.common !== undefined) {
     _.map(params.common, (item, key) => {
       axios.defaults.headers.common[key] = item
@@ -9,25 +9,15 @@ function setHeader(params = {}) {
   }
 }
 
- function axiosGet (url, params = {}, header = {}) {
-  return new Promise((resolve, reject) => {
-    setHeader(header)
 
-    axios.get(url, { params })
-      .then(({data}) => {
-        resolve(data)  
-      })
-      .catch(error => {
-        let data = error
-        if (error.response !== undefined) {
-          data = error.response.data
-        }
-        reject(data)
-      })
-  })
+const axiosGet = async (url, params = {}, header = {}) => {
+  setHeader(header)
+  return await axios.get(url, { params })
+    .then((data) => { return ({data: data}) })
+    .catch((error) => { return ({error: error.response.data})})
 }
 
-function axiosPost (url, data, header = {}, config = {}) {
+const axiosPost = (url, data, header = {}, config = {}) => {
   return new Promise((resolve, reject) => {
     setHeader(header)
     axios({
@@ -50,7 +40,7 @@ function axiosPost (url, data, header = {}, config = {}) {
   })
 }
 
-function axiosPut (url, data, header = {}, config = {}) {
+const axiosPut = (url, data, header = {}, config = {}) => {
   return new Promise((resolve, reject) => {
     setHeader(header)
     axios({
@@ -72,7 +62,7 @@ function axiosPut (url, data, header = {}, config = {}) {
   })
 }
 
-function axiosDelete (url, header = {}, config = {}) {
+const axiosDelete = (url, header = {}, config = {}) => {
   return new Promise((resolve, reject) => {
     setHeader(header)
     axios({

@@ -4,10 +4,11 @@ import ItemList from './components/ItemList'
 import Pagination from './components/Pagination'
 import Loading from './components/Loading'
 import Header from './components/Header'
-import { Table, Paper, Typography } from '@material-ui/core'
+import { Table, Paper, Typography, Button } from '@material-ui/core'
 import { renameKey, isFunction } from './services/objectHelper'
 import { axiosGet } from './services/axiosHelper'
 import propTypes from 'prop-types'
+import ModalError from './components/Modal/Modal'
 
 export default class ListEnhanced extends Component {
   constructor() {
@@ -21,7 +22,8 @@ export default class ListEnhanced extends Component {
       loading: true,
       order: '',
       orderBy: '',
-      searchParams: {}
+      searchParams: {},
+      errorState: true
     }
   }
 
@@ -62,10 +64,10 @@ export default class ListEnhanced extends Component {
             resolve(data.data)
           })
       }).catch(error => {
-        this.setState({error, loading: false}, reject(error))
+        this.setState({error, loading: false})
       })
     } else {
-      this.setState({loading: false}, reject('No API nor Header in your configuration'))
+      this.setState({loading: false, data: []}, reject('No API nor Header in your configuration'))
     }
   })
 
@@ -118,35 +120,24 @@ export default class ListEnhanced extends Component {
   render() {
     const { header, actionListFunction, transformDataOnDisplay, messages } = this.props
     const { rowsPerPageOptions } = !_.isUndefined(this.props.api) && !_.isUndefined(this.props.api.options)
-    const { data, page, itemsPerPage, total, order, orderBy, loading } = this.state
+    const { data, page, itemsPerPage, total, order, orderBy, loading, errorState } = this.state
 
-    if (!_.isEmpty(data) || total !== 0 || loading === true) {
-      return (
-        <React.Fragment>
-          <Table>
-            <Header {...this.props} onRequestSort={this.handleRequestSort} handleSearchRequest={this.handleSearchRequest} order={order} orderBy={orderBy}/>
-            {loading === true ? <Loading /> : <ItemList actionListFunction={actionListFunction} header={header} data={data} total={total} transformDataOnDisplay={transformDataOnDisplay}/>}
-            <Pagination
-              page={page} 
-              rowsPerPage={itemsPerPage} 
-              rowsPerPageOptions={!_.isUndefined(rowsPerPageOptions) ? rowsPerPageOptions : []} 
-              count={total} 
-              onChangePage={(event, page) => this.handleChangePage(event, page)} 
-              onChangeRowsPerPage={(event) => this.handleChangeRowsPerPage(event)} />
-          </Table>
-        </React.Fragment>
-      )
-    } else {
-      return (
-        <React.Fragment>
-          <Paper>
-            <Typography variant="h5" component="h3" className="no-data-found">
-              { _.get(messages, 'nodata') ? messages.nodata : "No data where available to display this component."}
-            </Typography>
-          </Paper>
-        </React.Fragment>
-      )
-    }
+    return (
+      <React.Fragment>
+        <ModalError messages={messages} open={errorState} />
+        <Table>
+          <Header {...this.props} onRequestSort={this.handleRequestSort} handleSearchRequest={this.handleSearchRequest} order={order} orderBy={orderBy}/>
+          {loading === true ? <Loading /> : <ItemList actionListFunction={actionListFunction} header={header} data={data} total={total} transformDataOnDisplay={transformDataOnDisplay}/>}
+          {!_.isEmpty(data) && <Pagination
+            page={page} 
+            rowsPerPage={itemsPerPage} 
+            rowsPerPageOptions={!_.isUndefined(rowsPerPageOptions) ? rowsPerPageOptions : []} 
+            count={total} 
+            onChangePage={(event, page) => this.handleChangePage(event, page)} 
+            onChangeRowsPerPage={(event) => this.handleChangeRowsPerPage(event)} />}
+        </Table>
+      </React.Fragment>
+    )
   }
 }
 
