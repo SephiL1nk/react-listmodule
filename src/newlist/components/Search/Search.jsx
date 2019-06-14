@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { withStyles } from '@material-ui/core'
+import { withStyles, TableRow, TableCell, TableBody } from '@material-ui/core'
 import style from './style'
 
 class Search extends Component {
@@ -13,7 +13,9 @@ class Search extends Component {
   render() {
     return (
       <React.Fragment>
-        <div>Search</div>
+        <TableBody>
+          <TableRow><TableCell>Search</TableCell></TableRow>
+        </TableBody>  
       </React.Fragment>
     )
   }

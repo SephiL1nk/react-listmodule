@@ -1,9 +1,11 @@
-transformOptionsToParams = (datas) => {
+import _ from 'lodash'
+
+const transformOptionsToParams = (datas) => {
   const { itemsPerPageKey, pageKey } = datas.api.options
   const { itemsPerPage, page, order, orderBy } = datas.state
   let { searchParams } = datas.state
 
-  this.applyRulesToParams(searchParams)
+  applyRulesToParams(searchParams)
 
   let params = {}
   params[itemsPerPageKey ? itemsPerPageKey : 'itemsPerPage'] = itemsPerPage
@@ -17,7 +19,7 @@ transformOptionsToParams = (datas) => {
   return params
 }
 
-applyRulesToParams = (datas) => {
+const applyRulesToParams = (datas) => {
   //apply search rules for search fields
   _.map(this.props.header, column => {
     if (column.search && column.search.suffix) {

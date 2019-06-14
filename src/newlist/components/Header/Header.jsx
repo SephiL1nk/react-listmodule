@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import _ from 'lodash'
 import { withStyles, TableHead, TableRow, TableCell } from '@material-ui/core'
 import style from './style'
 import Search from '../Search/Search'
 import propTypes from 'prop-types'
 
-class Header extends Component {
+class Header extends PureComponent {
   //Constructor Init
   constructor() {
     super()
@@ -13,15 +13,14 @@ class Header extends Component {
 
   render() {
     const { header } = this.props
-    console.log(header)
     
     return (
       <React.Fragment>
         <TableHead>
           <TableRow>
-            {!_.isEmpty(header) && _.map(header, col => {
+            {_.map(header, (col, index) => {
               return (
-                <TableCell>{col.label}</TableCell>
+                <TableCell key={`${col.id}-header`}>{col.label}</TableCell>
               )
             })}
           </TableRow>
@@ -33,7 +32,7 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  header: propTypes.shape({
+  header: propTypes.arrayOf(propTypes.shape({
     id: propTypes.string.isRequired,
     numeric: propTypes.bool,
     sortable: propTypes.bool,
@@ -44,8 +43,11 @@ Header.propTypes = {
       multiple: propTypes.bool,
       by: propTypes.string
     })
-  }),
+  })),
 }
 
+Header.defaultProps = {
+  header: []
+}
 
 export default withStyles(style)(Header)

@@ -23,7 +23,7 @@ class Error extends Component {
         style={{ minHeight: '100vh' }}
         >
           <Card className={classes.card} >
-            <CardContent>
+            <CardContent className='error-modal'>
               An error occured.
             </CardContent>
           </Card>
