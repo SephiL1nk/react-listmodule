@@ -11,13 +11,11 @@ class Items extends Component {
   }
 
   formatRender = (item, col) => {
-    let defaultItem = _.get(item, col.id)
-    let render  = _.isFunction(this.props.transformDataOnDisplay) ? this.props.transformDataOnDisplay(_.get(item, col.id), col.id) : _.get(item, col.id)
+    let render = _.get(item, col.id)
 
-    if (_.isEqual(render, defaultItem) && (_.isArray(render) || _.isObject(render) || _.isUndefined(render))) {
-      render = ``
+    if (_.isArray(render) || _.isObject(render) || _.isNil(render) || _.isNaN(render) ) {
+      render = ` `
     }
-
     if (col.id === 'actions') {
       render='actions'
     }
@@ -26,8 +24,7 @@ class Items extends Component {
   }
 
   render() {
-    const { items,header } = this.props
-    console.log(items)
+    const { items, header } = this.props
     return (
       <React.Fragment>
         <TableBody className='item-list' >

@@ -1654,25 +1654,22 @@ const header = [
   }
 ]
 
-const transformDataOnDisplay = (item, columnId) => {
-  item = item
-  let brands = _.clone(item)
-  let displayArrayAsString = ''
-  switch(columnId) {
-    case 'amount':
-    case 'budget':
-      item = !_.isUndefined(item) ? `${item.toString()}€` : ``
-    break
-    case 'brands':
-      _.map(brands, (brand, index) => { 
-        displayArrayAsString += brands.length > 1 && brands.length !== index ? brand.name + '  ' : brand.name 
+const transformDataOnFetch = (data) => {
+  _.map(data, item => {
+      let amount = item['amount']
+      let startDate = new Date(item['startDate'])
+      let brands = ''
+      _.map(item.brands, brand => {
+         brands += brand.name+' ' 
       })
-      item = displayArrayAsString
-    break
-  default: null
+      startDate = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`
+      item['amount'] = !_.isUndefined(amount) ? `${amount.toString()}€` : ``
+      item['budget'] = item.amount * item.maxParticipations
+      item['startDate'] = startDate
+      item['brands'] = brands
+    })
 
-    return item
-  }
+    return data
 }
 
 const api = {
@@ -1681,7 +1678,7 @@ const api = {
     "itemsPerPageKey": "itemsPerPage",
     "pageKey": "page",
     "dataKey": "data.hydra:member",
-    "totalItemsKey": "hydra:totalItems",
+    "totalItemsKey": "data.hydra:totalItems",
     "itemsPerPage": 15,
     "rowsPerPageOptions": [
       10,
@@ -1692,7 +1689,7 @@ const api = {
   "header": {
     "common": {
       "Accept": "application/ld+json",
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImN0eSI6IkpXVCJ9.eyJpYXQiOjE1NjA1MDE1MjgsImV4cCI6MTU2MDU4NzkyOCwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJ1c2VybmFtZSI6ImRldm9wcyIsImNvbXBhbnkiOiI0ZWMwOWExMi1kMDU0LTRkMjQtYjdiOC02ZWU1OWVmYjJkYWUiLCJmdWxsTmFtZSI6IkRldmVsb3BwZXIgVXNlciIsImlwIjoiOTEuMjEyLjIxLjI0NyIsInV1aWQiOiI3YjA2Yjk2NC1mY2YxLTRmNDQtYjQ0OC03NGNmZmExZTA0YzQifQ.hKYJDzgKwWIYkhkiUuJgJHOedZoOoORupFVOWTshKfi05C9xXtroJGBfRoe45z4GRUBcIOv1h8QGJynnyCkonYHth2HF9zyw3aXJ8MlZFHF4bf1L4thxMnoi5VXdDMUfNo8Yu-WdnL2XWYvOzFT0vMsC4d43ptZzIgwv0nIN7ADMNwUFjoK_enoohpcCaC0tv-uqZbK5zrs1UUagG2vYdsTI0VlSHwbsWqtsTZxGliuSGH4sW1dLmnkvPFyJxrdceqGuLjnIQ300rr7GqUK6dwounMP9zeM6flMZJlFIdbbNfXKieBnixoeuplXoEzIO9OanjrzwLhIz7O9MpIsDfEdRPiBRMFD8iENJu2eZDO7Jh6XQbFwgFUuG5RZRwkNesxZHsRi73j72w_fKAvjZwQM-AtHF9axycE78Srl8Pg6eTblCBnjmsgPtCszljtx5O_DVjcrmQdOOZ0YO8j-zfkmm4Ykl_GBQT19IU0oQR192VoGNuFMlSC7Vlg7cw0P1vsfBcRzr_-dYlhaxmQ6yLM4cV2UFXBCsLaZHE4UvN_GHl7D7M1u3Bm2eciNyqtslrj4cgtR0qMuAMaz1S_UutYU3jsEe2pQmrTW0pQeIBiN5m4-6labroppMDsCGbD4MB1IzWB5iCRHuvcQHWKVwZy-eWr2Ons_zliPA8DkgN-8"
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImN0eSI6IkpXVCJ9.eyJpYXQiOjE1NjA4NDQ3MzUsImV4cCI6MTU2MDkzMTEzNSwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJ1c2VybmFtZSI6ImRldm9wcyIsImNvbXBhbnkiOiI0ZWMwOWExMi1kMDU0LTRkMjQtYjdiOC02ZWU1OWVmYjJkYWUiLCJmdWxsTmFtZSI6IkRldmVsb3BwZXIgVXNlciIsImlwIjoiOTEuMjEyLjIxLjI0NyIsInV1aWQiOiI3YjA2Yjk2NC1mY2YxLTRmNDQtYjQ0OC03NGNmZmExZTA0YzQifQ.iOosYuYXqVZvnR1felcMsNYt6fXBllEXr0LGPeqyO09Slhjd9C3RCs_VMmnJivlMqXSWPCqh259JAr-6quUn7tsCwlqnNHjGGbOA2B2pCo9VRuc_Ms_pELtsULbgvOSmCBKn3pTkirkC0xwdj1Lr4AVy4YrqMojvpndVek_m0HP5hqcUMb0X1mpaR-zuKs-Zr5Cm27iV5ftZ3MIyL6iVYQnnPyB0iRKM0vx0tqUffOER_iE00ZDBtdwHPjGaaBfbTHAtEwo3kVjZclprczYM2zL7xk4E-4Hfyr9wNykICQWhhfqHn0NxbYZO2lgQH-am02BXuxSy9WKOtA6sjbuox1o7TOBpXnuTtemjsAPJSfZA3_hVabKRJuezOZvZM_8iWMhHxD02PKeEZBOH15A3HFQp51K4AsZIzMUPu8Q_lGMtlM0aY98O2vq8uq2Qy7h2Ue8r1x00xl1dVh5S5a799M9SHnPpiFwevwbtk4JiH7zBR1k4JSaO-tLsuo6uF7IZRZ4Il052kd3xjuqmwc1EwAV2-m9IpgT_k6sicXwZ0nB97QsadnffhuN3jjJNXzwEZbmMG07-5ip1RjSdWlFAq0-QgX7Zqyhj41o1ZRVxJhxkfRwH8BWS7tx_t5v8RLcLF8mnxviCGQRB17vkxsXk6HYcOxg4I2UY6xLuXTywhW4"
     }
   }
 }
@@ -5926,4 +5923,4 @@ const apiResponse = {
   "hydra:totalItems": 27
 }
 
-export { api, header, listCoupons, apiResponse, transformDataOnDisplay }
+export { api, header, listCoupons, apiResponse, transformDataOnFetch }

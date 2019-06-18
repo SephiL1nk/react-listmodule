@@ -1,31 +1,42 @@
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
-import { withStyles, TableHead, TableRow, TableCell } from '@material-ui/core'
+import { withStyles, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core'
 import style from './style'
 import Search from '../Search/Search'
 import propTypes from 'prop-types'
 
 class Header extends PureComponent {
-  //Constructor Init
-  constructor() {
-    super()
-  }
-
   render() {
-    const { header } = this.props
+    const { header, showSearchBar, searchParams } = this.props
     
     return (
       <React.Fragment>
         <TableHead>
           <TableRow>
-            {_.map(header, (col, index) => {
+            {_.map(header, col => {
               return (
-                <TableCell key={`${col.id}-header`}>{col.label}</TableCell>
-              )
+                  <TableCell key={`${col.id}-header`}>
+                    {col.label}
+                  </TableCell>
+                )
             })}
           </TableRow>
         </TableHead>
-        <Search />
+        <TableBody>
+            <TableRow>
+            {showSearchBar && _.map(header, col => {
+              return (
+                <TableCell key={`${col.id}-search`}>
+                  <Search 
+                      column={col} 
+                      searchParams={searchParams}
+                  />
+                </TableCell>
+              )
+            })}
+            </TableRow>
+        </TableBody>
+        
       </React.Fragment> 
     )
   }
@@ -44,10 +55,12 @@ Header.propTypes = {
       by: propTypes.string
     })
   })),
+  showSearchBar: propTypes.bool.isRequired
 }
 
 Header.defaultProps = {
-  header: []
+  header: [],
+  showSearchBar: true
 }
 
 export default withStyles(style)(Header)

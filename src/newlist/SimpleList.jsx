@@ -3,14 +3,12 @@ import propTypes from 'prop-types'
 import Header from './components/Header/Header'
 import Items from './components/Items/Items'
 import Pagination from './components/Pagination'
-import Search from './components/Search/Search'
 import _ from 'lodash'
 import Error from './components/Error/Error'
 import { axiosGet } from '../services/axiosHelper'
 import Loader from './components/Loader/Loader'
-import { Table } from '@material-ui/core';
-import { formatDataFromApiResponse } from './services/manager'
-
+import { Table } from '@material-ui/core'
+import { deleteEmptyKeys } from './services/manager'
 class SimpleList extends Component {
   //Constructor Init
   constructor() {
@@ -26,50 +24,104 @@ class SimpleList extends Component {
       orderBy: '',
       dataKey: '',
       totalItemsKey: '',
+      search: {
+      }
     }
   }
 
   componentDidMount() {
     const options = _.get(this.props, 'api.options')
-    const itemsPerPage = options && options.itemsPerPage
+    const itemsPerPage = options && options.itemsPerPage 
     const dataKey = options && options.dataKey
     const totalItemsKey = options && options.totalItemsKey
 
-    itemsPerPage && this.setState({itemsPerPage}) 
-    dataKey && this.setState({dataKey}) 
-    totalItemsKey && this.setState({totalItemsKey}) 
-    this.getDataFromApi()
+    this.setState({
+      itemsPerPage: itemsPerPage,
+      dataKey: dataKey,
+      totalItemsKey: totalItemsKey
+    }, () => this.getDataFromApi())
   }
 
-  getDataFromApi = async () => {
-    let { url, header, params } = this.props.api
-    this.setState({loading: true})
-    await axiosGet(url, params, header)
-      .then(({data, error}) => this.setState({items: data, error: error}))
+  getDataFromApi = async (params = {}) => {
+    let { url, header } = this.props.api
+    const { search, dataKey, totalItemsKey } = this.state
+    if (_.isEmpty(this.state.items)) {
+      this.setState({loading: true})
+    }
+
+    let requestParams = !_.isEmpty(params) ? params : search
+
+    await axiosGet(url, requestParams, header)
+      .then(({data, error}) => {
+        let transformData = this.props.transformDataOnFetch(_.get(data, dataKey))
+        let totalItems = _.get(data, totalItemsKey)
+        this.setState({items: transformData, error: error, total: totalItems })
+      })
     this.setState({loading:false})
   }
 
-  formatItems = (items) => {
-    const { dataKey } = this.state
-    let formattedData = _.get(items, dataKey)
-    return formattedData
+  /**
+   * Launch search in current items fetched from the last api call.
+   * Filter toLowerCase the search params and the item value targeted to be case insensitive
+   */
+  searchInCurrentData = (params) => {
+    let { items } = this.state
+    let filteredItems = _.filter(items, item => {
+      let filterKey =_.get(item, Object.keys(params)[0])
+      filterKey = !_.isNil(filterKey) && filterKey.toString().toLowerCase()
+      if (_.includes(filterKey, params[Object.keys(params)[0]].toString().toLowerCase())) {
+        return item
+      }
+    })
+
+    this.setState({items: filteredItems})
+  }
+
+  /**
+   * Performed right after a search
+   * It set the new search state (params to search for) 
+   * Then search in current datas from the last api call
+   * Then after a timerSearch timeout, search from the real API. Timer is cleared every times the user make a search input
+   * To avoid re-rendering in the middle of the 
+   */
+  searchParams = (params) => {
+    let { timerSearch } = this.props
+
+    //set new params and concatenate
+    let { search } = this.state
+    let newParams = deleteEmptyKeys({...search, ...params})
+    this.setState({search: newParams})
+    
+    this.searchInCurrentData(params)
+
+    //After timerSearch (int), will call the API
+    let duration = parseInt(timerSearch)
+    clearTimeout(this.toBecalledOnce)
+    this.toBecalledOnce = setTimeout(() => {
+      this.getDataFromApi(newParams)
+    }, duration) 
   }
 
   render() {
-    const { items, error, loading, itemsPerPage } = this.state
-    const { header, transformDataOnDisplay } = this.props
+    const { items, error, loading, itemsPerPage, total } = this.state
+    const { header, transformDataOnDisplay, showSearchBar } = this.props
     return (
       <React.Fragment key='list-simple'>
-        <Table >
-          <Header header={header} />
-          {loading === true ? <Loader /> : 
-            !_.isEmpty(error) ? <Error /> :
-            <React.Fragment>
-              <Items items={this.formatItems(items)} header={header} transformDataOnDisplay={transformDataOnDisplay}/>
-            </React.Fragment>}
-        </Table>
-        <Pagination />
-      </React.Fragment>
+          <Table >
+            <Header 
+              header={header} 
+              showSearchBar={showSearchBar} 
+              searchParams={this.searchParams}
+            />
+              <React.Fragment>
+                {loading === true ? <Loader /> :
+                  !_.isEmpty(error) ? <Error /> : 
+                    <Items items={items} header={header} transformDataOnDisplay={transformDataOnDisplay} itemsPerPage={itemsPerPage}/>
+                }
+              </React.Fragment>
+            <Pagination total={total}/>
+          </Table>
+        </React.Fragment>
     )
   }
 }
@@ -96,16 +148,15 @@ SimpleList.propTypes = {
   }),
   showSearchBar: propTypes.bool,
   refresh: propTypes.bool,
-  transformDataOnFetch: propTypes.func,
-  transformDataOnDisplay: propTypes.func
+  transformDataOnFetch: propTypes.func
 }
 
 SimpleList.defaultProps = {
   api: {},
   showSearchBar: true,
   refresh: false,
-  transformDataOnFetch: () => {},
-  transformDataOnDisplay: () => {}
+  transformDataOnFetch: data => data,
+  timerSearch: 1000
 }
 
 export default SimpleList

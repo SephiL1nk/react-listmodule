@@ -24,7 +24,8 @@ export default {
     'lodash',
     '@material-ui/core',
     'react-datetime',
-    'axios'
+    'axios',
+    'react-paginate'
   ],
   plugins: [
     resolve({ preferBuiltins: false }),

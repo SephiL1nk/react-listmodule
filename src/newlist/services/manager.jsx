@@ -1,31 +1,16 @@
 import _ from 'lodash'
 
-const transformOptionsToParams = (datas) => {
-  const { itemsPerPageKey, pageKey } = datas.api.options
-  const { itemsPerPage, page, order, orderBy } = datas.state
-  let { searchParams } = datas.state
-
-  applyRulesToParams(searchParams)
-
-  let params = {}
-  params[itemsPerPageKey ? itemsPerPageKey : 'itemsPerPage'] = itemsPerPage
-  params[pageKey ? pageKey : 'page'] = page +1
-  //During this merge, latest take precedence, as with extraParams needs to be overwrite by searchParams
-  params = {...params, ...searchParams}
-  if (order !== '') {
-    params['order'] = {[orderBy]: order}
-  }
-
-  return params
-}
-
-const applyRulesToParams = (datas) => {
-  //apply search rules for search fields
-  _.map(this.props.header, column => {
-    if (column.search && column.search.suffix) {
-      renameKey(datas, column.id, column.id+column.search.suffix)
+/**
+ * Check if null, undefined and empty keys are in the object and delete the keys accordingly;
+ */
+const deleteEmptyKeys = (object) => {
+  _.map(object, (value, key) => {
+    if (_.isNil(value) || value.length === 0) {
+      delete object[key]        
     }
   })
+
+  return object
 }
 
-export { transformOptionsToParams }
+export { deleteEmptyKeys } 
