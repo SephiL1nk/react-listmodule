@@ -1672,24 +1672,25 @@ const transformDataOnFetch = (data) => {
     return data
 }
 
+const pagination = {
+  "rowsPerPageKey": "itemsPerPage",
+  "pageKey": "page",
+  "dataKey": "data.hydra:member",
+  "totalItemsKey": "data.hydra:totalItems",
+  "rowsPerPage": 5,
+  "rowsPerPageOptions": [
+    5,
+    10,
+    15
+  ]
+}
+
 const api = {
   "url": "https://billypp.webcoupon.web.oxv.fr/api/coupons",
-  "options": {
-    "itemsPerPageKey": "itemsPerPage",
-    "pageKey": "page",
-    "dataKey": "data.hydra:member",
-    "totalItemsKey": "data.hydra:totalItems",
-    "itemsPerPage": 15,
-    "rowsPerPageOptions": [
-      10,
-      20,
-      30
-    ]
-  },
   "header": {
     "common": {
       "Accept": "application/ld+json",
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImN0eSI6IkpXVCJ9.eyJpYXQiOjE1NjA4NDQ3MzUsImV4cCI6MTU2MDkzMTEzNSwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJ1c2VybmFtZSI6ImRldm9wcyIsImNvbXBhbnkiOiI0ZWMwOWExMi1kMDU0LTRkMjQtYjdiOC02ZWU1OWVmYjJkYWUiLCJmdWxsTmFtZSI6IkRldmVsb3BwZXIgVXNlciIsImlwIjoiOTEuMjEyLjIxLjI0NyIsInV1aWQiOiI3YjA2Yjk2NC1mY2YxLTRmNDQtYjQ0OC03NGNmZmExZTA0YzQifQ.iOosYuYXqVZvnR1felcMsNYt6fXBllEXr0LGPeqyO09Slhjd9C3RCs_VMmnJivlMqXSWPCqh259JAr-6quUn7tsCwlqnNHjGGbOA2B2pCo9VRuc_Ms_pELtsULbgvOSmCBKn3pTkirkC0xwdj1Lr4AVy4YrqMojvpndVek_m0HP5hqcUMb0X1mpaR-zuKs-Zr5Cm27iV5ftZ3MIyL6iVYQnnPyB0iRKM0vx0tqUffOER_iE00ZDBtdwHPjGaaBfbTHAtEwo3kVjZclprczYM2zL7xk4E-4Hfyr9wNykICQWhhfqHn0NxbYZO2lgQH-am02BXuxSy9WKOtA6sjbuox1o7TOBpXnuTtemjsAPJSfZA3_hVabKRJuezOZvZM_8iWMhHxD02PKeEZBOH15A3HFQp51K4AsZIzMUPu8Q_lGMtlM0aY98O2vq8uq2Qy7h2Ue8r1x00xl1dVh5S5a799M9SHnPpiFwevwbtk4JiH7zBR1k4JSaO-tLsuo6uF7IZRZ4Il052kd3xjuqmwc1EwAV2-m9IpgT_k6sicXwZ0nB97QsadnffhuN3jjJNXzwEZbmMG07-5ip1RjSdWlFAq0-QgX7Zqyhj41o1ZRVxJhxkfRwH8BWS7tx_t5v8RLcLF8mnxviCGQRB17vkxsXk6HYcOxg4I2UY6xLuXTywhW4"
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImN0eSI6IkpXVCJ9.eyJpYXQiOjE1NjA5MzYxNzYsImV4cCI6MTU2MTAyMjU3Niwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJ1c2VybmFtZSI6ImRldm9wcyIsImNvbXBhbnkiOiI0ZWMwOWExMi1kMDU0LTRkMjQtYjdiOC02ZWU1OWVmYjJkYWUiLCJmdWxsTmFtZSI6IkRldmVsb3BwZXIgVXNlciIsImlwIjoiOTEuMjEyLjIxLjI0NyIsInV1aWQiOiI3YjA2Yjk2NC1mY2YxLTRmNDQtYjQ0OC03NGNmZmExZTA0YzQifQ.uCgPbeDXE-y3dHzk_R-4fTz0KtutuxKSYyu1vHqzwnTkYrlh1KzlKZCOgfcXbpDfZV3muJIExeOicwTJ3-pIhvQyk9OodyUaJNSjAWddjuXA56CwwFfwjQ3PItAzyfdtzZaVY6zB2BHOYeT96rCo1YcjxoyvQ_MuzxWVdb2IOnXcuTnSREmEvi0PQO5_w6bQl5ccM7_sihqRkHP2bfGB9jp9qALBUqO1PeIl-kmfhAym_rJSyy9JxuvtfkQqdbyCCroHS4UtuZTWAjOqCNghOPqBe9PY19q2RPPvpPwu7bISLeakichGd_oOUC8cHkrKooNQLWWIjL5DEyqm09nU_7x99Wod3cpUPLumptOp6MZpCCU56xnd4HOc5W1Z1V4E2tpXR6kRyyoumDYrV6Gs0nvnWAZjAIEvx0dSB6w20-G7fcDUjHGTbl0ofz9B2hd18qWog19JQPAUc2NfV7ih7clBJNhZqExKG1EnS60ifHU8K0EQIeM1MpM02u9FSkqOB93RXKO7UNVn_KmElJjTxPZaPKh18njCimR1MuibW4W3O1j8mnU1j3-zshdFGsWdagnVW8-ZXfcU3TTt69xBgAget6ehpezhBKoxkls3m2Hv7gAjz7V93cCumlalRDI-oAMiijsr0QNa9MPQPtHqX08pW_ziT2EhoKoiqu82XY4"
     }
   }
 }
@@ -5923,4 +5924,4 @@ const apiResponse = {
   "hydra:totalItems": 27
 }
 
-export { api, header, listCoupons, apiResponse, transformDataOnFetch }
+export { api, header, listCoupons, apiResponse, transformDataOnFetch, pagination }

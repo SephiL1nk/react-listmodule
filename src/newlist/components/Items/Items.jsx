@@ -24,7 +24,7 @@ class Items extends Component {
   }
 
   render() {
-    const { items, header } = this.props
+    const { items, header, actions } = this.props
     return (
       <React.Fragment>
         <TableBody className='item-list' >
@@ -32,12 +32,19 @@ class Items extends Component {
             return (<TableRow key={`${index}-itemrow`}>
               {_.map(header, (col, cellindex) => {
                 const value = this.formatRender(item, col)
-                
-                return (
-                  <TableCell key={`column${cellindex}-row${index}-itemcell`}>
-                    {value}
-                  </TableCell>
-                )
+                {if (col.id === 'actions' && _.isFunction(actions)) {
+                  return (
+                    <TableCell key={`column${cellindex}-row${index}-itemcell`}>
+                      {actions(item)}
+                    </TableCell>
+                  )
+                } else {
+                  return (
+                    <TableCell key={`column${cellindex}-row${index}-itemcell`}>
+                      {value}
+                    </TableCell>
+                  )
+                }}
               })}
           </TableRow>)
           })}
@@ -49,7 +56,8 @@ class Items extends Component {
 
 Items.defaultProps = {
   items: {},
-  header: 0
+  header: 0,
+  actions: () => {}
 }
 
 export default withStyles(style)(Items)

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import propTypes from 'prop-types'
 import Header from './components/Header/Header'
 import Items from './components/Items/Items'
-import Pagination from './components/Pagination'
+import Pagination from './components/Pagination/Pagination'
 import _ from 'lodash'
 import Error from './components/Error/Error'
 import { axiosGet } from '../services/axiosHelper'
@@ -17,7 +17,7 @@ class SimpleList extends Component {
       error: {},
       items: [], 
       page: 0,
-      itemsPerPage: 10,
+      rowsPerPage: 10,
       total: 0,
       loading: true,
       order: '',
@@ -30,26 +30,26 @@ class SimpleList extends Component {
   }
 
   componentDidMount() {
-    const options = _.get(this.props, 'api.options')
-    const itemsPerPage = options && options.itemsPerPage 
-    const dataKey = options && options.dataKey
-    const totalItemsKey = options && options.totalItemsKey
+    const { pagination } = this.props
+    const rowsPerPage = pagination && pagination.rowsPerPage 
+    const dataKey = pagination && pagination.dataKey
+    const totalItemsKey = pagination && pagination.totalItemsKey
 
     this.setState({
-      itemsPerPage: itemsPerPage,
+      rowsPerPage: rowsPerPage,
       dataKey: dataKey,
       totalItemsKey: totalItemsKey
     }, () => this.getDataFromApi())
   }
 
-  getDataFromApi = async (params = {}) => {
+  getDataFromApi = async () => {
     let { url, header } = this.props.api
-    const { search, dataKey, totalItemsKey } = this.state
+    const { dataKey, totalItemsKey } = this.state
     if (_.isEmpty(this.state.items)) {
       this.setState({loading: true})
     }
 
-    let requestParams = !_.isEmpty(params) ? params : search
+    let requestParams = this.getSearchParams()
 
     await axiosGet(url, requestParams, header)
       .then(({data, error}) => {
@@ -61,10 +61,37 @@ class SimpleList extends Component {
   }
 
   /**
+   * Create an object with all parameters needed to perform a search :
+   * Is called before every API call
+   * rowsPerPageKey (should be in sync with the rowsPerPage option)
+   * Page (needed page)
+   * Search parameters from the search bar if there is one
+   * Orderby (should be on one column if it is)
+   * 
+   */
+  getSearchParams = () => {
+    const { pagination } = this.props
+
+    const { rowsPerPage, search, page } = this.state
+    let paginateOptions = {
+      [pagination.rowsPerPageKey]: rowsPerPage,
+      [pagination.pageKey]: page+1
+    }
+
+    const params = {
+      ...search,
+      ...paginateOptions
+    }
+
+    return params
+  }
+
+  /**
    * Launch search in current items fetched from the last api call.
    * Filter toLowerCase the search params and the item value targeted to be case insensitive
    */
   searchInCurrentData = (params) => {
+
     let { items } = this.state
     let filteredItems = _.filter(items, item => {
       let filterKey =_.get(item, Object.keys(params)[0])
@@ -90,36 +117,51 @@ class SimpleList extends Component {
     //set new params and concatenate
     let { search } = this.state
     let newParams = deleteEmptyKeys({...search, ...params})
-    this.setState({search: newParams})
+    this.setState({search: newParams, page: 0}, 
+      () => this.searchInCurrentData(this.getSearchParams()))
     
-    this.searchInCurrentData(params)
+    
 
     //After timerSearch (int), will call the API
     let duration = parseInt(timerSearch)
     clearTimeout(this.toBecalledOnce)
     this.toBecalledOnce = setTimeout(() => {
-      this.getDataFromApi(newParams)
+      this.getDataFromApi()
     }, duration) 
   }
 
+  onChangePage = (event, page) => {
+    console.log(page)
+    this.setState({page}, () => this.getDataFromApi())
+  }
+
+  onChangeRowsPerPage = (event) => {
+    this.setState({rowsPerPage: event.target.value, page: 0}, () => this.getDataFromApi())
+  }
+
   render() {
-    const { items, error, loading, itemsPerPage, total } = this.state
-    const { header, transformDataOnDisplay, showSearchBar } = this.props
+    const { items, error, loading, rowsPerPage, total, page } = this.state
+    const { header, transformDataOnDisplay, showSearchBar, pagination, actions } = this.props
     return (
       <React.Fragment key='list-simple'>
           <Table >
             <Header 
               header={header} 
               showSearchBar={showSearchBar} 
-              searchParams={this.searchParams}
-            />
+              searchParams={this.searchParams} />
               <React.Fragment>
                 {loading === true ? <Loader /> :
                   !_.isEmpty(error) ? <Error /> : 
-                    <Items items={items} header={header} transformDataOnDisplay={transformDataOnDisplay} itemsPerPage={itemsPerPage}/>
+                    <Items items={items} header={header} transformDataOnDisplay={transformDataOnDisplay} actions={actions} />
                 }
               </React.Fragment>
-            <Pagination total={total}/>
+            <Pagination 
+              total={total} 
+              page={page}
+              rowsPerPageOptions={pagination.rowsPerPageOptions} 
+              rowsPerPage={rowsPerPage} 
+              onChangePage={this.onChangePage} 
+              onChangeRowsPerPage={this.onChangeRowsPerPage} />
           </Table>
         </React.Fragment>
     )
@@ -135,24 +177,27 @@ SimpleList.propTypes = {
   }),
   api: propTypes.shape({
     url: propTypes.string.isRequired,
-    options: propTypes.shape({
-      itemsPerPageKey: propTypes.string,
-      pageKey: propTypes.string,
-      dataKey: propTypes.string,
-      totalItemsKey: propTypes.string,
-      totalItems: propTypes.number,
-      itemsPerPage: propTypes.number,
-      rowsPerPageOptions: propTypes.array
-    }),
     header: propTypes.object.isRequired
+  }),
+  pagination: propTypes.shape({
+    rowsPerPageKey: propTypes.string,
+    pageKey: propTypes.string,
+    dataKey: propTypes.string,
+    totalItemsKey: propTypes.string,
+    totalItems: propTypes.number,
+    rowsPerPage: propTypes.number,
+    rowsPerPageOptions: propTypes.array
   }),
   showSearchBar: propTypes.bool,
   refresh: propTypes.bool,
-  transformDataOnFetch: propTypes.func
+  transformDataOnFetch: propTypes.func,
+  actions: propTypes.func
 }
 
 SimpleList.defaultProps = {
   api: {},
+  actions: () => {},
+  pagination: {},
   showSearchBar: true,
   refresh: false,
   transformDataOnFetch: data => data,
