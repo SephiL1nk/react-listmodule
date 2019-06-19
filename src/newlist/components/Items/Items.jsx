@@ -11,16 +11,8 @@ class Items extends Component {
   }
 
   formatRender = (item, col) => {
-    let render = _.get(item, col.id)
-
-    if (_.isArray(render) || _.isObject(render) || _.isNil(render) || _.isNaN(render) ) {
-      render = ` `
-    }
-    if (col.id === 'actions') {
-      render='actions'
-    }
-
-    return render
+    const value = _.get(item, col.id)
+    return (_.isArray(value) || _.isObject(value) || _.isNil(value) || _.isNaN(value)) ? '' : value
   }
 
   render() {
