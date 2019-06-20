@@ -16,27 +16,25 @@ class Items extends Component {
   }
 
   render() {
-    const { items, header, actions } = this.props
+    const { items, header, actions, classes } = this.props
     return (
       <React.Fragment>
         <TableBody className='item-list' >
           { _.map(items, (item, index) => {
-            return (<TableRow key={`${index}-itemrow`}>
+            return (
+              <TableRow 
+                key={`${index}-itemrow`}
+                classes={{
+                  'root': index % 2 !== 0 ? classes.oddRow : classes.evenRow
+                }}
+              >
               {_.map(header, (col, cellindex) => {
                 const value = this.formatRender(item, col)
-                {if (col.id === 'actions' && _.isFunction(actions)) {
                   return (
                     <TableCell key={`column${cellindex}-row${index}-itemcell`}>
-                      {actions(item)}
+                      {col.id === 'actions' && _.isFunction(actions) ? actions(item) : value}
                     </TableCell>
                   )
-                } else {
-                  return (
-                    <TableCell key={`column${cellindex}-row${index}-itemcell`}>
-                      {value}
-                    </TableCell>
-                  )
-                }}
               })}
           </TableRow>)
           })}

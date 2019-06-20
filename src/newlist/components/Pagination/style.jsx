@@ -1,7 +1,7 @@
 const paginationActions = {
-  'pagination': {
+  pagination: {
     display: 'inline-flex'
-  } 
+  },
 }
 
 export { paginationActions }

@@ -1,3 +1,7 @@
+import React from 'react'
+import { Button } from '@material-ui/core';
+
+
 const listCoupons = [
   {
     "@id": "/api/coupons/5ca5d16fe0416284944fcb22",
@@ -1672,6 +1676,17 @@ const transformDataOnFetch = (data) => {
     return data
 }
 
+const actions = (item) => {
+  console.log(item)
+
+  return (
+    <React.Fragment>
+      <Button onClick={() => console.log(item.id)} >
+        console log the id
+      </Button>
+    </React.Fragment>)
+}
+
 const pagination = {
   "rowsPerPageKey": "itemsPerPage",
   "pageKey": "page",
@@ -1682,7 +1697,9 @@ const pagination = {
     5,
     10,
     15
-  ]
+  ],
+  "labelRowsPerPage": "Nombre de lignes par pages", 
+  "labelDisplayedRows": ({from, to, count}) => `${from}-${to} de ${count}`
 }
 
 const api = {
@@ -1690,7 +1707,7 @@ const api = {
   "header": {
     "common": {
       "Accept": "application/ld+json",
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImN0eSI6IkpXVCJ9.eyJpYXQiOjE1NjA5MzYxNzYsImV4cCI6MTU2MTAyMjU3Niwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJ1c2VybmFtZSI6ImRldm9wcyIsImNvbXBhbnkiOiI0ZWMwOWExMi1kMDU0LTRkMjQtYjdiOC02ZWU1OWVmYjJkYWUiLCJmdWxsTmFtZSI6IkRldmVsb3BwZXIgVXNlciIsImlwIjoiOTEuMjEyLjIxLjI0NyIsInV1aWQiOiI3YjA2Yjk2NC1mY2YxLTRmNDQtYjQ0OC03NGNmZmExZTA0YzQifQ.uCgPbeDXE-y3dHzk_R-4fTz0KtutuxKSYyu1vHqzwnTkYrlh1KzlKZCOgfcXbpDfZV3muJIExeOicwTJ3-pIhvQyk9OodyUaJNSjAWddjuXA56CwwFfwjQ3PItAzyfdtzZaVY6zB2BHOYeT96rCo1YcjxoyvQ_MuzxWVdb2IOnXcuTnSREmEvi0PQO5_w6bQl5ccM7_sihqRkHP2bfGB9jp9qALBUqO1PeIl-kmfhAym_rJSyy9JxuvtfkQqdbyCCroHS4UtuZTWAjOqCNghOPqBe9PY19q2RPPvpPwu7bISLeakichGd_oOUC8cHkrKooNQLWWIjL5DEyqm09nU_7x99Wod3cpUPLumptOp6MZpCCU56xnd4HOc5W1Z1V4E2tpXR6kRyyoumDYrV6Gs0nvnWAZjAIEvx0dSB6w20-G7fcDUjHGTbl0ofz9B2hd18qWog19JQPAUc2NfV7ih7clBJNhZqExKG1EnS60ifHU8K0EQIeM1MpM02u9FSkqOB93RXKO7UNVn_KmElJjTxPZaPKh18njCimR1MuibW4W3O1j8mnU1j3-zshdFGsWdagnVW8-ZXfcU3TTt69xBgAget6ehpezhBKoxkls3m2Hv7gAjz7V93cCumlalRDI-oAMiijsr0QNa9MPQPtHqX08pW_ziT2EhoKoiqu82XY4"
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImN0eSI6IkpXVCJ9.eyJpYXQiOjE1NjEwMjI2NTgsImV4cCI6MTU2MTEwOTA1OCwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJ1c2VybmFtZSI6ImRldm9wcyIsImNvbXBhbnkiOiI0ZWMwOWExMi1kMDU0LTRkMjQtYjdiOC02ZWU1OWVmYjJkYWUiLCJmdWxsTmFtZSI6IkRldmVsb3BwZXIgVXNlciIsImlwIjoiOTEuMjEyLjIxLjI0NyIsInV1aWQiOiI3YjA2Yjk2NC1mY2YxLTRmNDQtYjQ0OC03NGNmZmExZTA0YzQifQ.m35SmPYemxV-VV7NVd39sU_9k-v5ka--tW4GKDePWGThfeGfhl2fZGqGww3KSa2VGg-Zv2aj3q4YBSZKW-KUaCzYdYgYkZFIeUn-FVFdFFuRfnw1xM6dM2J_6Yn2aTo9AT01pZPVhx2OrYziwiYUSYphxW1pjq4Uo34Wp_ciDuaCz-orXV9QSys3mehcb0CgDj0uanCgx804yVE_TSebo1pAT78Jld6fNGCzzffXd2eGA14VeDrozJF0jecdecQgIhZtiFS_tYT8mTrUQ0CAbC0yjX402fYm_IX3TWkP-ZNkM3YOxpv78vsrKMSxUXHz42tH6leSO7tSB_YRtMwX8bMkgxpASUqxJ2sLhcl7csCrZ2DbvyhKPhpz-5jTRNnxfIztnfJir7jSaQvj8eO1Juw2TZtiKpVLdQuoeBX1yoyNI63npon4Qjgsv3jxJ87dm1j0eRevLVP8bsQi_u3iczuRo-gcNU8g8NFuJIw104t9vJvZFiaRLzNPEB4Kv_bdT1yYwH5LFrIIxP9pEfhby1NRX0V5HHFu4zd7LT_JMC8R0wSQWKMerjdGDqzkBlq7ZU0JaHkkvvfXvPdyFlyHNUdq-uRd-ptdwab4JbGaUg6P79ZVKLxTrZLck9r2-3dp6R6qndTBhrIMtJRAROTEgbtFx-ujYXshx2acd29tSec"
     }
   }
 }
@@ -5924,4 +5941,4 @@ const apiResponse = {
   "hydra:totalItems": 27
 }
 
-export { api, header, listCoupons, apiResponse, transformDataOnFetch, pagination }
+export { api, header, listCoupons, apiResponse, transformDataOnFetch, pagination, actions }

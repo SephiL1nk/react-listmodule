@@ -13,4 +13,8 @@ const deleteEmptyKeys = (object) => {
   return object
 }
 
-export { deleteEmptyKeys } 
+const filterByRegex = (item, regex) => {
+  return regex.exec(item)[0]
+}
+
+export { deleteEmptyKeys, filterByRegex } 

@@ -8,7 +8,7 @@ import Error from './components/Error/Error'
 import { axiosGet } from '../services/axiosHelper'
 import Loader from './components/Loader/Loader'
 import { Table } from '@material-ui/core'
-import { deleteEmptyKeys } from './services/manager'
+import { deleteEmptyKeys, filterByRegex } from './services/manager'
 class SimpleList extends Component {
   //Constructor Init
   constructor() {
@@ -92,9 +92,13 @@ class SimpleList extends Component {
    */
   searchInCurrentData = (params) => {
 
+    //Filter params to match the current columns, and avoid the [gte]|[lte] and so on.
+    let filteredParams = {} 
+    _.map(params, (value, key) => { return _.set(filteredParams, [filterByRegex(key, /^\w+/)], value) })
+
     let { items } = this.state
     let filteredItems = _.filter(items, item => {
-      let filterKey =_.get(item, Object.keys(params)[0])
+      let filterKey =_.get(item, Object.keys(filteredParams)[0])
       filterKey = !_.isNil(filterKey) && filterKey.toString().toLowerCase()
       if (_.includes(filterKey, params[Object.keys(params)[0]].toString().toLowerCase())) {
         return item
@@ -161,7 +165,9 @@ class SimpleList extends Component {
               rowsPerPageOptions={pagination.rowsPerPageOptions} 
               rowsPerPage={rowsPerPage} 
               onChangePage={this.onChangePage} 
-              onChangeRowsPerPage={this.onChangeRowsPerPage} />
+              onChangeRowsPerPage={this.onChangeRowsPerPage}
+              labelRowsPerPage={pagination.labelRowsPerPage}
+              labelDisplayedRows={pagination.labelDisplayedRows} />
           </Table>
         </React.Fragment>
     )
@@ -186,7 +192,8 @@ SimpleList.propTypes = {
     totalItemsKey: propTypes.string,
     totalItems: propTypes.number,
     rowsPerPage: propTypes.number,
-    rowsPerPageOptions: propTypes.array
+    rowsPerPageOptions: propTypes.array,
+    rowsPerPageText: propTypes.string
   }),
   showSearchBar: propTypes.bool,
   refresh: propTypes.bool,

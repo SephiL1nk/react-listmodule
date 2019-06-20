@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { TablePagination, TableFooter, TableRow } from '@material-ui/core'
+import { TablePagination, TableFooter, TableRow, TableBody } from '@material-ui/core'
 import { withStyles } from '@material-ui/core'
 import { paginationActions } from './style'
 import IconButton from '@material-ui/core/IconButton'
@@ -32,12 +32,11 @@ class Pagination extends Component {
   }
 
   render() {
-    const { rowsPerPageOptions, rowsPerPage, page, total, onChangeRowsPerPage, classes } = this.props
+    const { rowsPerPageOptions, rowsPerPage, page, total, onChangeRowsPerPage, classes, labelRowsPerPage, labelDisplayedRows } = this.props
 
     const PaginationActions = () => {
-      console.log(page)
       return (
-        <div className={classes.pagination}>
+        <div className={`${classes.pagination}`}>
           <IconButton
             onClick={(e) => this.handleFirstPageButtonClick(e)}
             disabled={page === 0}
@@ -68,24 +67,19 @@ class Pagination extends Component {
 
     return (
       <React.Fragment>
-        <TableFooter>
-          <TableRow>
+        <TableBody>
             <TablePagination
               rowsPerPageOptions={rowsPerPageOptions}
-              colSpan={3}
               count={total}
               rowsPerPage={parseInt(rowsPerPage)}
               page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': 'Rows per page' },
-                native: true,
-              }}
+              labelRowsPerPage={labelRowsPerPage}
+              labelDisplayedRows={labelDisplayedRows}
               onChangePage={(e) => {}}
               onChangeRowsPerPage={(e) => onChangeRowsPerPage(e)}
               ActionsComponent={PaginationActions}
             />
-          </TableRow>
-        </TableFooter>      
+        </TableBody>      
       </React.Fragment>
     )
   }
@@ -94,7 +88,9 @@ class Pagination extends Component {
 Pagination.defaultProps = {
   rowsPerPageOptions: [10,20,30],
   rowsPerPage: 10,
-  page: 0
+  page: 0,
+  labelRowsPerPage: 'Rows per page',
+  labelDisplayedRows: ({from, to, count}) => `${from}-${to} of ${count}`
 }
 
 export default withStyles(paginationActions)(Pagination)

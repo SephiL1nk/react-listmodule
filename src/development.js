@@ -1,6 +1,6 @@
 import SimpleList from './newlist/SimpleList'
 import { render } from 'react-dom'
-import { api, header, listCoupons, transformDataOnFetch, pagination } from '../__fixtures__/listApiResponse'
+import { api, header, listCoupons, transformDataOnFetch, pagination, actions } from '../__fixtures__/listApiResponse'
 import React, { Component } from 'react'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 
@@ -9,7 +9,8 @@ const props = {
   api, 
   header,
   transformDataOnFetch,
-  pagination
+  pagination,
+  actions
 }
 
 class List extends Component {
