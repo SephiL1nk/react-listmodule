@@ -14,7 +14,17 @@ const deleteEmptyKeys = (object) => {
 }
 
 const filterByRegex = (item, regex) => {
-  return regex.exec(item)[0]
+  let result = regex.exec(item)
+  return !_.isNil(result) ? result[0] : false 
 }
 
-export { deleteEmptyKeys, filterByRegex } 
+const filterObjectKeyByRegex = (object, regex) => {
+  let newObject = {}
+  _.map(object, (value, key) => {
+    newObject = {...{[filterByRegex(key, regex)]: value}}
+  })
+
+  return newObject
+}
+
+export { deleteEmptyKeys, filterByRegex, filterObjectKeyByRegex } 

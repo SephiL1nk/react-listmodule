@@ -8,7 +8,7 @@ import Error from './components/Error/Error'
 import { axiosGet } from '../services/axiosHelper'
 import Loader from './components/Loader/Loader'
 import { Table } from '@material-ui/core'
-import { deleteEmptyKeys, filterByRegex } from './services/manager'
+import { deleteEmptyKeys, filterObjectKeyByRegex, filterByRegex } from './services/manager'
 class SimpleList extends Component {
   //Constructor Init
   constructor() {
@@ -89,22 +89,21 @@ class SimpleList extends Component {
   /**
    * Launch search in current items fetched from the last api call.
    * Filter toLowerCase the search params and the item value targeted to be case insensitive
+   * Use the current input used by the user to filter the results
    */
-  searchInCurrentData = (params) => {
-
+  searchInCurrentData = (param) => {
+    let regex = /^[\w\.]+/
     //Filter params to match the current columns, and avoid the [gte]|[lte] and so on.
-    let filteredParams = {} 
-    _.map(params, (value, key) => { return _.set(filteredParams, [filterByRegex(key, /^\w+/)], value) })
-
+    let filterParam = filterObjectKeyByRegex(param, regex)
+    let searchKey = Object.keys(filterParam)[0]
+    const searchRegex = new RegExp(param[searchKey], 'g')
+    console.log(searchKey)
     let { items } = this.state
     let filteredItems = _.filter(items, item => {
-      let filterKey =_.get(item, Object.keys(filteredParams)[0])
-      filterKey = !_.isNil(filterKey) && filterKey.toString().toLowerCase()
-      if (_.includes(filterKey, params[Object.keys(params)[0]].toString().toLowerCase())) {
-        return item
-      }
+      //get Items from the search key and take them to string and lowercase
+      let valueToFilter = !_.isNil(_.get(item, searchKey)) && _.get(item, searchKey).toString().toLowerCase()
+      return valueToFilter && filterByRegex(valueToFilter, searchRegex) && item 
     })
-
     this.setState({items: filteredItems})
   }
 
@@ -115,14 +114,14 @@ class SimpleList extends Component {
    * Then after a timerSearch timeout, search from the real API. Timer is cleared every times the user make a search input
    * To avoid re-rendering in the middle of the 
    */
-  searchParams = (params) => {
+  searchParams = (currentSearchParam) => {
     let { timerSearch } = this.props
 
     //set new params and concatenate
     let { search } = this.state
-    let newParams = deleteEmptyKeys({...search, ...params})
+    let newParams = deleteEmptyKeys({...search, ...currentSearchParam})
     this.setState({search: newParams, page: 0}, 
-      () => this.searchInCurrentData(this.getSearchParams()))
+      () => this.searchInCurrentData(currentSearchParam))
     
     
 
@@ -135,7 +134,6 @@ class SimpleList extends Component {
   }
 
   onChangePage = (event, page) => {
-    console.log(page)
     this.setState({page}, () => this.getDataFromApi())
   }
 
