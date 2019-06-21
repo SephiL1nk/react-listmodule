@@ -14,8 +14,8 @@ const deleteEmptyKeys = (object) => {
 }
 
 const filterByRegex = (item, regex) => {
-  let result = regex.exec(item)
-  return !_.isNil(result) ? result[0] : false 
+  let result = item.match(regex)
+  return !_.isNil(result) ? result[0] : null 
 }
 
 const filterObjectKeyByRegex = (object, regex) => {

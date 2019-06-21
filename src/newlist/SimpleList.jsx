@@ -92,18 +92,22 @@ class SimpleList extends Component {
    * Use the current input used by the user to filter the results
    */
   searchInCurrentData = (param) => {
-    let regex = /^[\w\.]+/
+    let regex = /^[\w]+/
     //Filter params to match the current columns, and avoid the [gte]|[lte] and so on.
     let filterParam = filterObjectKeyByRegex(param, regex)
     let searchKey = Object.keys(filterParam)[0]
-    const searchRegex = new RegExp(param[searchKey], 'g')
-    console.log(searchKey)
+    //construct the regexp used to search keywords form the search
+    const searchRegex = new RegExp(`^${filterParam[searchKey]}`, 'igm')
+
     let { items } = this.state
+
     let filteredItems = _.filter(items, item => {
-      //get Items from the search key and take them to string and lowercase
+      //get the value to filter from the Item
       let valueToFilter = !_.isNil(_.get(item, searchKey)) && _.get(item, searchKey).toString().toLowerCase()
+
       return valueToFilter && filterByRegex(valueToFilter, searchRegex) && item 
     })
+    
     this.setState({items: filteredItems})
   }
 
