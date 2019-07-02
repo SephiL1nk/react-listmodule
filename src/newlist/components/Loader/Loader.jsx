@@ -1,7 +1,8 @@
 import React from 'react'
 import { CircularProgress, Grid } from '@material-ui/core'
 import _ from 'lodash'
-
+import { withStyles } from '@material-ui/styles'
+import style from './style'
 const Loader = () => {
   return (
     <React.Fragment>
@@ -18,4 +19,4 @@ const Loader = () => {
   )
 }
 
-export default Loader
+export default withStyles(style)(Loader)

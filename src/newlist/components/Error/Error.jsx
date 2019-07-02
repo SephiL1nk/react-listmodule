@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { Card, CardContent, Grid, withStyles } from '@material-ui/core'
+import { Card, CardContent, Grid } from '@material-ui/core'
 import style from './style'
+import { withStyles } from '@material-ui/styles'
 
 class Error extends Component {
   //Constructor Init

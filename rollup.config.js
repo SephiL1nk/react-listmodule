@@ -5,8 +5,8 @@ import pkg from './package.json'
 // Convert CJS modules to ES6, so they can be included in a bundle
 import commonjs from 'rollup-plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
-import postcssModules from 'postcss-modules'
 import json from 'rollup-plugin-json'
+import external from 'rollup-plugin-peer-deps-external'
 
 const cssExportMap = {}
 
@@ -18,45 +18,48 @@ export default {
   }],
   // All the used libs needs to be here
   external: [
-    'react', 
-    'react-dom',
-    'react-proptypes',
-    'lodash',
-    '@material-ui/core',
-    'react-datetime',
-    'axios',
-    'react-paginate'
+    'axios'
   ],
   plugins: [
-    resolve({ preferBuiltins: false }),
+    external({
+      includeDependencies: true
+    }),
+    resolve({ 
+      preferBuiltins: false,
+      extensions: [ '.mjs', '.js', '.jsx', '.json' ]
+    }),
     postcss({
-      plugins: [
-        postcssModules({
-          getJSON (id, exportTokens) {
-            cssExportMap[id] = exportTokens;
-          }
-        })
-      ],
-      getExportNamed: false,
-      getExport (id) {
-        return cssExportMap[id];
-      },
-      extract: 'dist/styles.css',
+      modules: true
     }),
     json({
       'include': 'node_modules/**'
     }),
     babel({
-      presets: ["@babel/preset-env", "@babel/preset-react"],
-      plugins: ["@babel/plugin-proposal-class-properties",  "@babel/plugin-proposal-export-default-from"],
+      runtimeHelpers: true,
+      presets: [["@babel/preset-env"], "@babel/preset-react"],
+      plugins: [
+        "@babel/plugin-proposal-class-properties",  
+        "@babel/plugin-proposal-export-default-from", 
+        "transform-react-remove-prop-types"
+      ],
       exclude: [
         'node_modules/**'
-      ]
+      ],
+      babelrc: false
     }),
     commonjs({
-      include: 'node_modules/**',
       namedExports: {
-        'node_modules/react-is/index.js': ['ForwardRef', 'isValidElementType']
+        'node_modules/react-is/index.js': ['ForwardRef', 'isValidElementType'],
+        'node_modules/@material-ui/core/styles/index.js': [
+          'createGenerateClassName',
+          'createMuiTheme',
+          'createStyles',
+          'jssPreset',
+          'MuiThemeProvider',
+          'withStyles',
+          'withTheme'
+        ],
+        'node_modules/prop-types/index.js': ['element', 'func', 'bool', 'oneOfType', 'elementType']
       }
     })
   ]

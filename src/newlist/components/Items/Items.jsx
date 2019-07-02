@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { withStyles, TableBody, TableCell, TableRow } from '@material-ui/core'
+import { TableBody, TableCell, TableRow } from '@material-ui/core'
+import { withStyles } from '@material-ui/styles'
 import style from './style'
 
 class Items extends Component {

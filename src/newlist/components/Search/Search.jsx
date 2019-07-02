@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { withStyles, TextField } from '@material-ui/core'
+import { TextField } from '@material-ui/core'
 import style from './style'
+import { withStyles } from '@material-ui/styles'
 import propTypes from 'prop-types'
 class Search extends Component {
   //Constructor Init

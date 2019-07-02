@@ -1,12 +1,11 @@
-import ListEnhanced from './List'
-
-import React, { Component } from 'react';
+import SimpleList from './newlist/SimpleList'
+import React, { Component } from 'react'
 
 class List extends Component {
   render() {
     return (
       <React.Fragment>
-        <ListEnhanced {...this.props} />   
+          <SimpleList {...this.props} />
       </React.Fragment>
     )
   }

@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
-import { withStyles, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core'
+import { TableHead, TableRow, TableCell, TableBody } from '@material-ui/core'
 import style from './style'
+import { withStyles } from '@material-ui/styles'
 import Search from '../Search/Search'
 import propTypes from 'prop-types'
 
