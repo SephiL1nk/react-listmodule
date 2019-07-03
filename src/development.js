@@ -1,4 +1,4 @@
-import SimpleList from './newlist/SimpleList'
+import SimpleList from './SimpleList'
 import { render } from 'react-dom'
 import { api, header, listCoupons, transformDataOnFetch, pagination, actions } from '../__fixtures__/listApiResponse'
 import React, { Component } from 'react'

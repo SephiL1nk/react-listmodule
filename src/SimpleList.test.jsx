@@ -4,7 +4,7 @@ import MockAdapter from 'axios-mock-adapter'
 import { shallow, mount } from 'enzyme'
 import SimpleList from './SimpleList'
 import React from 'react'
-import { api, apiResponse } from '../../__fixtures__/listApiResponse.js'
+import { api, apiResponse } from '../__fixtures__/listApiResponse.js'
 
 var mock = new MockAdapter(axios)
 

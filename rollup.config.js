@@ -50,16 +50,11 @@ export default {
     commonjs({
       namedExports: {
         'node_modules/react-is/index.js': ['ForwardRef', 'isValidElementType'],
-        'node_modules/@material-ui/core/styles/index.js': [
-          'createGenerateClassName',
-          'createMuiTheme',
-          'createStyles',
-          'jssPreset',
+        'node_modules/@material-ui/styles/index.js': [
           'MuiThemeProvider',
           'withStyles',
-          'withTheme'
         ],
-        'node_modules/prop-types/index.js': ['element', 'func', 'bool', 'oneOfType', 'elementType']
+        'node_modules/prop-types/index.js': ['element', 'default', 'func', 'bool', 'oneOfType', 'elementType']
       }
     })
   ]

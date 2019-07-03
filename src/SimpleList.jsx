@@ -5,7 +5,7 @@ import Items from './components/Items/Items'
 import Pagination from './components/Pagination/Pagination'
 import _ from 'lodash'
 import Error from './components/Error/Error'
-import { axiosGet } from '../services/axiosHelper'
+import { axiosGet } from './services/axiosHelper'
 import Loader from './components/Loader/Loader'
 import { Table } from '@material-ui/core'
 import { deleteEmptyKeys, filterObjectKeyByRegex, filterByRegex } from './services/manager'
@@ -40,6 +40,12 @@ class SimpleList extends Component {
       dataKey: dataKey,
       totalItemsKey: totalItemsKey
     }, () => this.getDataFromApi())
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.refresh !== prevProps.refresh) {
+      this.getDataFromApi()
+    }
   }
 
   getDataFromApi = async () => {
