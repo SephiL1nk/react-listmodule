@@ -1,6 +1,6 @@
 {
   "name": "sogec-react-listmodule",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "React App component on React 16.8 and Material-ui/core 3* for lists to be used with an external API.",
   "main": "dist/module.js",
   "style": "dist/styles.css",
