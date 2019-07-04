@@ -25,20 +25,23 @@ class SimpleList extends Component {
       dataKey: '',
       totalItemsKey: '',
       search: {
+      },
+      filter: {
       }
     }
   }
 
   componentDidMount() {
-    const { pagination } = this.props
+    const { pagination, api } = this.props
     const rowsPerPage = pagination && pagination.rowsPerPage 
     const dataKey = pagination && pagination.dataKey
     const totalItemsKey = pagination && pagination.totalItemsKey
-
+    const filter = api && api.filter
     this.setState({
       rowsPerPage: rowsPerPage,
       dataKey: dataKey,
-      totalItemsKey: totalItemsKey
+      totalItemsKey: totalItemsKey, 
+      filter: {...filter}
     }, () => this.getDataFromApi())
   }
 
@@ -59,7 +62,7 @@ class SimpleList extends Component {
 
     await axiosGet(url, requestParams, header)
       .then(({data, error}) => {
-        let transformData = this.props.transformDataOnFetch(_.get(data, dataKey))
+        let transformData = this.props.transformDataOnFetch(_.get(data, dataKey, data))
         let totalItems = _.get(data, totalItemsKey)
         this.setState({items: transformData, error: error, total: totalItems })
       })
@@ -78,17 +81,17 @@ class SimpleList extends Component {
   getSearchParams = () => {
     const { pagination } = this.props
 
-    const { rowsPerPage, search, page } = this.state
+    const { rowsPerPage, search, page, filter } = this.state
     let paginateOptions = {
       [pagination.rowsPerPageKey]: rowsPerPage,
       [pagination.pageKey]: page+1
     }
 
     const params = {
+      ...filter,
       ...search,
       ...paginateOptions
-    }
-
+      }
     return params
   }
 
