@@ -8,7 +8,7 @@ import propTypes from 'prop-types'
 
 class Header extends PureComponent {
   render() {
-    const { header, showSearchBar, searchParams } = this.props
+    const { header, showSearchBar, searchParams, classes } = this.props
     
     return (
       <React.Fragment>
@@ -27,11 +27,14 @@ class Header extends PureComponent {
             <TableRow>
             {showSearchBar && _.map(header, col => {
               return (
-                <TableCell key={`${col.id}-search`}>
-                  <Search 
+                <TableCell 
+                  key={`${col.id}-search`}
+                  className={classes.searchInputsTable}>
+                  {col.id !== 'actions' && <Search 
                       column={col} 
                       searchParams={searchParams}
-                  />
+                  />}
+                  
                 </TableCell>
               )
             })}
