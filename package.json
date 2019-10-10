@@ -1,16 +1,16 @@
 {
   "name": "sogec-react-listmodule",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "build/index.es.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "./node_modules/react-scripts/bin/react-scripts.js start",
-    "build": "./node_modules/react-scripts/bin/react-scripts.js build",
+    "build:app": "./node_modules/react-scripts/bin/react-scripts.js build",
     "test": "./node_modules/react-scripts/bin/react-scripts.js test",
     "eject": "./node_modules/react-scripts/bin/react-scripts.js eject",
-    "build:module": "rollup -c",
+    "build": "rollup -c",
     "start:dev": "rollup -c --watch"
   },
   "dependencies": {
@@ -27,10 +27,10 @@
     "lodash": "^4.17.15",
     "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
-    "react-scripts": "3.1.2",
     "typescript": "3.6.3"
   },
   "devDependencies": {
+    "react-scripts": "3.1.2",
     "@babel/cli": "^7.6.2",
     "@types/lodash": "^4.14.139",
     "@types/react": "^16.9.2",
