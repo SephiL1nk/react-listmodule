@@ -5,7 +5,6 @@
   "module": "dist/index.es.js",
   "jsnext:main": "build/index.es.js",
   "types": "dist/index.d.ts",
-  "private": true,
   "scripts": {
     "start": "./node_modules/react-scripts/bin/react-scripts.js start",
     "build": "./node_modules/react-scripts/bin/react-scripts.js build",
